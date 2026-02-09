@@ -105,6 +105,35 @@
         font-weight: 500;
       }
 
+      &-status {
+        padding: 2px 12px;
+        border-radius: 10px;
+        font-size: 0.813rem;
+        font-weight: 500;
+        display: inline-flex;
+        align-items: center;
+
+        &__open {
+          color: rgba(0, 176, 191, 1);
+          background-color: rgba(228, 253, 255, 1);
+        }
+
+        &__inprogress {
+          background-color: rgba(214, 216, 255, 1);
+          color: rgba(62, 64, 219, 1);
+        }
+
+        &__completed {
+          background-color: rgba(225, 255, 204, 1);
+          color: rgba(8, 162, 104, 1);
+        }
+
+        &__blocked {
+          background-color: rgba(252, 238, 181, 1);
+          color: rgba(177, 54, 0, 1);
+        }
+      }
+
       &-wrapper {
         position: relative;
       }
@@ -143,6 +172,16 @@
       font-size: 0.875rem;
       color: #ef4444;
     }
+  }
+}
+
+:host ::ng-deep {
+  .ng-select.ng-select-opened .ng-select-container,
+  .ng-select.ng-select-focused .ng-select-container {
+    border: none;
+    box-shadow: 0 0 0 2px rgba(170, 175, 255, 1);
+    background-color: rgba(255, 255, 255, 1);
+    border-radius: 5px;
   }
 }
 

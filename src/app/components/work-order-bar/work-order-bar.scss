@@ -17,15 +17,13 @@
   }
 
   &__open {
-    box-shadow: 0 0 0 1px rgba(209, 250, 179, 1);
-    background-color: rgba(248, 255, 243, 1);
-
+    box-shadow: 0 0 0 1px rgb(185 244 249);
+    background-color: rgb(242 254 255);
   }
 
   &__inprogress {
     box-shadow: 0 0 0 1px rgba(222, 224, 255, 1);
     background-color: rgba(237, 238, 255, 1);
-
   }
 
   &__completed {
@@ -66,7 +64,8 @@
       font-weight: 400;
 
       &__open {
-        background: #e5e7eb; color: #374151;
+        color: rgba(0, 176, 191, 1);
+        background-color: rgba(228, 253, 255, 1);
       }
 
       &__inprogress {

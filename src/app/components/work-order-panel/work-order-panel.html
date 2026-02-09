@@ -47,7 +47,14 @@
           placeholder="Select status"
           [clearable]="false"
           [searchable]="false"
-        />
+        >
+          <ng-template ng-label-tmp let-item="item">
+            <div class="panel-form__field-status" [class]="'panel-form__field-status__' + item.label.toLowerCase().replace(' ', '')">
+              {{ item.label }}
+            </div>
+          </ng-template>
+        </ng-select>
+
 
         @if (form.get('status')?.hasError('required') && form.get('status')?.touched) {
           <span class="panel-form__field-error">
