@@ -1,0 +1,37 @@
+<div
+  class="work-order"
+  [ngClass]="['work-order__' + statusClass, menuOpen ? 'work-order__active' : '']"
+  [style.left.%]="left"
+  [style.width.%]="width"
+  (click)="onEdit($event)"
+>
+  <div class="work-order__content">
+    <span class="work-order__content-name">{{ order.name }}</span>
+    <span class="work-order__content-status" [ngClass]="'work-order__content-status__' + statusClass">
+      {{ statusText(order.status) }}
+    </span>
+  </div>
+
+  <div class="work-order__actions">
+
+    <button
+      class="work-order__actions-button"
+      aria-label="Work order actions"
+      (click)="toggleMenu($event)"
+    >
+      <img
+        ngSrc="assets/icons/horizontal-ellipsis.svg"
+        alt="horizontal ellipsis button image"
+        height="4"
+        width="14"
+      >
+    </button>
+
+    @if (menuOpen) {
+      <div class="work-order__actions-dropdown">
+        <button class="work-order__actions-dropdown__item" (click)="onEdit($event)">Edit</button>
+        <button class="work-order__actions-dropdown__item work-order__actions-dropdown__item-delete" (click)="onDelete($event)">Delete</button>
+      </div>
+    }
+  </div>
+</div>

@@ -1,0 +1,15 @@
+<div class="zoom-selector">
+  <div class="zoom-selector__label">Timescale</div>
+
+  <ng-select
+    class="zoom-selector__select"
+    bindLabel="label"
+    bindValue="value"
+    [items]="zoomOptions"
+    [clearable]="false"
+    [searchable]="false"
+    [ngModel]="zoom"
+    (ngModelChange)="zoomChange.emit($event)"
+  >
+  </ng-select>
+</div>

@@ -1,0 +1,15 @@
+<ng-select
+  class="base-select"
+  [items]="items"
+  [bindLabel]="bindLabel"
+  [bindValue]="bindValue"
+  [placeholder]="placeholder"
+  [searchable]="searchable"
+  [clearable]="clearable"
+  [disabled]="disabled"
+  [(ngModel)]="value"
+  [ngModelOptions]="{ standalone: true }"
+  (change)="onChange($event)"
+  (blur)="onTouched()"
+>
+</ng-select>

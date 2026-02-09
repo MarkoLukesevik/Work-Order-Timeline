@@ -1,0 +1,19 @@
+.base-select {
+  --ng-select-border-radius: 6px;
+  --ng-select-border: 1px solid #d0d5dd;
+  --ng-select-bg: #fff;
+
+  .ng-select-container {
+    min-height: 40px;
+    font-size: 14px;
+  }
+
+  &.ng-select-focused .ng-select-container {
+    border-color: #6366f1;
+    box-shadow: 0 0 0 1px #6366f1;
+  }
+
+  &.ng-select-disabled {
+    opacity: 0.6;
+  }
+}

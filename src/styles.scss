@@ -1,1 +1,30 @@
-/* You can add global styles to this file, and also import other style files */
+@import "@ng-select/ng-select/themes/default.theme.css";
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "Circular-Std", serif;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #1f2937;
+  background: #f8f9fb;
+}
+
+::-webkit-scrollbar {
+  height: 8px;
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #f3f4f6;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #9ca3af;
+}
