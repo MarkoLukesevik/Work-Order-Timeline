@@ -50,7 +50,6 @@
     background-color: rgba(247, 249, 252, 1);
 
     &__canvas {
-
       &-header {
         display: flex;
 
@@ -93,6 +92,7 @@
         position: relative;
         height: 48px;
         cursor: pointer;
+        transition: all 0.1s linear;
 
         &:hover {
           background-color: rgba(238, 240, 255, 1);
@@ -103,6 +103,7 @@
           top: 0.25rem;
           bottom: 0.25rem;
           border-right: 1px solid rgba(230, 235, 240, 1);
+          transition: background-color 0.1s linear;
 
           &-tooltip {
             display: none;
