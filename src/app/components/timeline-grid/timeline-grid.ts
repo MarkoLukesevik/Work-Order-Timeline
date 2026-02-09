@@ -179,15 +179,18 @@ export class TimelineGrid implements OnInit, OnChanges, AfterViewInit {
 
     const selectedDate = new Date(column.date);
 
+    const columnBoundingBox = (event.currentTarget as HTMLElement).getBoundingClientRect();
+    const clickXPositionInsideColumn = event.clientX - columnBoundingBox.left;
+    const horizontalPercentage = clickXPositionInsideColumn / this.columnPixelWidth;
+
     if (this.zoom === ZoomLevelEnum.MONTH) {
-      const columnBoundingBox = (event.currentTarget as HTMLElement).getBoundingClientRect();
-      const clickXPositionInsideColumn = event.clientX - columnBoundingBox.left;
-      const horizontalPercentageWithinColumn = clickXPositionInsideColumn / this.columnPixelWidth;
-
       const totalDaysInMonth = new Date(selectedDate.getFullYear(), selectedDate.getMonth() + 1, 0).getDate();
-      const calculatedDayOfMonth = Math.max(1, Math.floor(horizontalPercentageWithinColumn * totalDaysInMonth) + 1);
-
+      const calculatedDayOfMonth = Math.max(1, Math.floor(horizontalPercentage * totalDaysInMonth) + 1);
       selectedDate.setDate(calculatedDayOfMonth);
+    }
+    else if (this.zoom === ZoomLevelEnum.WEEK) {
+      const daysToAdd = Math.floor(horizontalPercentage * 7);
+      selectedDate.setDate(selectedDate.getDate() + daysToAdd);
     }
 
     this.createOrder.emit({ workCenterId: workCenter.id, date: selectedDate });
