@@ -1,7 +1,8 @@
 import {Injectable} from '@angular/core';
-import {ZoomLevelEnum} from '../../enums/zoom-level';
+
 import TimelineColumn from '../../models/timeline-column';
 import BarPosition from '../../models/bar-position';
+import { ZoomLevelEnum } from '../../enums/zoom-level';
 
 @Injectable({
   providedIn: 'root',
@@ -26,20 +27,20 @@ export class TimelineUtilService {
 
   /** Extend range to the left, returning the new rangeStart */
   extendLeft(currentStart: Date, zoom: ZoomLevelEnum, count: number): Date {
-    const d = new Date(currentStart);
+    const date = new Date(currentStart);
     for (let i = 0; i < count; i++) {
-      this.retreatCursor(d, zoom);
+      this.retreatCursor(date, zoom);
     }
-    return d;
+    return date;
   }
 
   /** Extend range to the right, returning the new rangeEnd */
   extendRight(currentEnd: Date, zoom: ZoomLevelEnum, count: number): Date {
-    const d = new Date(currentEnd);
+    const date = new Date(currentEnd);
     for (let i = 0; i < count; i++) {
-      this.advanceCursor(d, zoom);
+      this.advanceCursor(date, zoom);
     }
-    return d;
+    return date;
   }
 
   /** Calculate bar position as percentages of total timeline width */
@@ -47,14 +48,14 @@ export class TimelineUtilService {
     startDate: string,
     endDate: string,
     rangeStart: Date,
-    totalMs: number
+    timelineDurationMs: number
   ): BarPosition {
     const start = new Date(startDate).getTime();
     const end = new Date(endDate).getTime();
     const rangeMs = rangeStart.getTime();
 
-    const leftPct = ((start - rangeMs) / totalMs) * 100;
-    const widthPct = ((end - start) / totalMs) * 100;
+    const leftPct = ((start - rangeMs) / timelineDurationMs) * 100;
+    const widthPct = ((end - start) / timelineDurationMs) * 100;
 
     return {
       left: Math.max(0, leftPct),
@@ -96,62 +97,62 @@ export class TimelineUtilService {
     }
   }
 
-  private formatColumnLabel(d: Date, zoom: ZoomLevelEnum): string {
+  private formatColumnLabel(date: Date, zoom: ZoomLevelEnum): string {
     switch (zoom) {
       case ZoomLevelEnum.MONTH:
-        return d.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+        return date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
       case ZoomLevelEnum.WEEK: {
-        const weekEnd = new Date(d);
+        const weekEnd = new Date(date);
         weekEnd.setDate(weekEnd.getDate() + 6);
-        return `${d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} - ${weekEnd.toLocaleDateString('en-US', { day: 'numeric' })}`;
+        return `${date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} - ${weekEnd.toLocaleDateString('en-US', { day: 'numeric' })}`;
       }
       case ZoomLevelEnum.DAY:
-        return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+        return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
     }
   }
 
-  private isCurrentPeriod(d: Date, now: Date, zoom: ZoomLevelEnum): boolean {
+  private isCurrentPeriod(date: Date, now: Date, zoom: ZoomLevelEnum): boolean {
     switch (zoom) {
       case ZoomLevelEnum.MONTH:
-        return d.getFullYear() === now.getFullYear() && d.getMonth() === now.getMonth();
+        return date.getFullYear() === now.getFullYear() && date.getMonth() === now.getMonth();
       case ZoomLevelEnum.WEEK: {
-        const weekEnd = new Date(d);
+        const weekEnd = new Date(date);
         weekEnd.setDate(weekEnd.getDate() + 6);
-        return now >= d && now <= weekEnd;
+        return now >= date && now <= weekEnd;
       }
       case ZoomLevelEnum.DAY:
         return (
-          d.getFullYear() === now.getFullYear() &&
-          d.getMonth() === now.getMonth() &&
-          d.getDate() === now.getDate()
+          date.getFullYear() === now.getFullYear() &&
+          date.getMonth() === now.getMonth() &&
+          date.getDate() === now.getDate()
         );
     }
   }
 
-  private advanceCursor(d: Date, zoom: ZoomLevelEnum): void {
+  private advanceCursor(date: Date, zoom: ZoomLevelEnum): void {
     switch (zoom) {
       case ZoomLevelEnum.MONTH:
-        d.setMonth(d.getMonth() + 1);
+        date.setMonth(date.getMonth() + 1);
         break;
       case ZoomLevelEnum.WEEK:
-        d.setDate(d.getDate() + 7);
+        date.setDate(date.getDate() + 7);
         break;
       case ZoomLevelEnum.DAY:
-        d.setDate(d.getDate() + 1);
+        date.setDate(date.getDate() + 1);
         break;
     }
   }
 
-  private retreatCursor(d: Date, zoom: ZoomLevelEnum): void {
+  private retreatCursor(date: Date, zoom: ZoomLevelEnum): void {
     switch (zoom) {
       case ZoomLevelEnum.MONTH:
-        d.setMonth(d.getMonth() - 1);
+        date.setMonth(date.getMonth() - 1);
         break;
       case ZoomLevelEnum.WEEK:
-        d.setDate(d.getDate() - 7);
+        date.setDate(date.getDate() - 7);
         break;
       case ZoomLevelEnum.DAY:
-        d.setDate(d.getDate() - 1);
+        date.setDate(date.getDate() - 1);
         break;
     }
   }
