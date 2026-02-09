@@ -60,8 +60,9 @@ export class TimelineGrid implements OnInit, OnChanges, AfterViewInit {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['zoom']) {
+    if (changes['zoom'] && !changes['zoom'].firstChange) {
       this.rebuildTimeline();
+      setTimeout(() => this.scrollToCurrentTimePeriod(), 0);
     }
   }
 
@@ -83,16 +84,16 @@ export class TimelineGrid implements OnInit, OnChanges, AfterViewInit {
   }
 
   private scrollToCurrentTimePeriod(): void {
-    requestAnimationFrame(() => {
-      const currentPeriodIndex = this.columns.findIndex(column => column.isCurrentPeriod);
+    if (!this.scrollContainerElement) return;
 
-      if (currentPeriodIndex !== -1 && this.scrollContainerElement) {
-        const scrollElement = this.scrollContainerElement.nativeElement;
-        const targetScrollLeft = (currentPeriodIndex * this.columnPixelWidth) - (scrollElement.clientWidth / 3);
+    const scrollElement = this.scrollContainerElement.nativeElement;
+    const currentPeriodIndex = this.columns.findIndex(column => column.isCurrentPeriod);
 
-        scrollElement.scrollLeft = Math.max(0, targetScrollLeft);
-      }
-    });
+    if (currentPeriodIndex !== -1) {
+      const columnLeft = currentPeriodIndex * this.columnPixelWidth;
+      const targetScrollLeft = columnLeft - (scrollElement.clientWidth / 2) + (this.columnPixelWidth / 2);
+      scrollElement.scrollLeft = Math.max(0, targetScrollLeft);
+    }
   }
 
   /**
