@@ -28,3 +28,79 @@ body {
 ::-webkit-scrollbar-thumb:hover {
   background: #9ca3af;
 }
+
+
+// region ng select
+.panel-form__field.ng-select {
+  .ng-value {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: rgba(62, 64, 219, 1);
+  }
+}
+
+.ng-dropdown-panel {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 100%;
+  margin-top: 0.25rem !important;
+
+  box-shadow: 0 0 0 1px rgba(104, 113, 150, 0.1) , 0 2.5px 3px -1.5px rgba(200, 207, 233, 1) , 0 4.5px 5px -1px rgba(216, 220, 235, 1);
+  border: none;
+  border-radius: 5px;
+  background-color: rgba(255, 255, 255, 1);
+  padding: 0.75rem 0;
+}
+
+.ng-dropdown-panel .ng-option {
+  color: rgba(47, 48, 89, 1);
+  font-size: 14px;
+  font-weight: 400;
+  padding: 0.375rem 0.75rem;
+}
+
+.ng-dropdown-panel .ng-option.ng-option-selected {
+  background-color: #ffffff !important;
+  color: rgba(62, 64, 219, 1) !important;
+  font-weight: 600;
+}
+// endregion
+
+// region datepicker
+ngb-datepicker {
+  border: none;
+  box-shadow: 0 0 0 1px rgba(104, 113, 150, 0.1), 0 2.5px 3px -1.5px rgba(200, 207, 233, 1), 0 4.5px 5px -1px rgba(216, 220, 235, 1);
+  border-radius: 8px;
+  font-family: inherit;
+  background-color: #ffffff;
+}
+
+.ngb-dp-header {
+  padding: 1rem 0.5rem !important;
+
+  .visually-hidden {
+    display: none;
+  }
+
+  ngb-datepicker-navigation-select {
+    column-gap: 0.5rem;
+  }
+
+  ngb-datepicker-navigation {
+    column-gap: 1rem;
+  }
+}
+
+.ngb-dp-day {
+  &[aria-selected="true"] {
+    color: rgba(86, 89, 255, 1) !important;
+    font-weight: 600;
+  }
+}
+
+.ngb-dp-week {
+  padding: 0 0.5rem 0.5rem 0.5rem !important;
+  column-gap: 1rem;
+}
+// endregion

@@ -31,7 +31,7 @@ export class App {
       .open(WorkOrderPanel, {
         editingOrder: null,
         workCenterId: workCenterId,
-        startDate: date,
+        initialStartDate: date,
 
       })
       .subscribe((result: Omit<WorkOrder, 'id'> & { id?: string }) => {
@@ -45,7 +45,7 @@ export class App {
       .open(WorkOrderPanel, {
         editingOrder: order,
         workCenterId: null,
-        startDate: null,
+        initialStartDate: null,
       })
       .subscribe((result: WorkOrder) => {
         if (!result) return;

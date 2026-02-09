@@ -1,5 +1,4 @@
-import {Component, inject} from '@angular/core';
-import { ModalService } from '../../services/modal-service/modal-service';
+import { Component, EventEmitter, Output } from '@angular/core';
 
 @Component({
   selector: 'app-base-modal',
@@ -8,9 +7,5 @@ import { ModalService } from '../../services/modal-service/modal-service';
   styleUrl: './base-modal.scss',
 })
 export class BaseModal {
-  private modalService: ModalService = inject(ModalService);
-
-  closeModal(): void {
-    this.modalService.close(null);
-  }
+  @Output() onBackgroundClick: EventEmitter<any> = new EventEmitter();
 }

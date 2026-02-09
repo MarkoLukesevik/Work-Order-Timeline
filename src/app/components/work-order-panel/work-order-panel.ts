@@ -33,101 +33,129 @@ import { WorkOrderStatusEnum } from '../../enums/work-order-status';
 export class WorkOrderPanel implements OnInit {
   @Input() editingOrder: WorkOrder | null = null;
   @Input() workCenterId: string | null = null;
-  @Input() startDate: Date | null = null;
+  @Input() initialStartDate: Date | null = null;
 
   private readonly workOrderService: WorkOrderService = inject(WorkOrderService);
   private readonly modalService: ModalService = inject(ModalService);
 
-  statusOptions = [
+  public isClosing: boolean = false;
+
+  readonly statusOptions = [
     { value: WorkOrderStatusEnum.OPEN, label: 'Open' },
     { value: WorkOrderStatusEnum.IN_PROGRESS, label: 'In Progress' },
     { value: WorkOrderStatusEnum.COMPLETED, label: 'Completed' },
     { value: WorkOrderStatusEnum.BLOCKED, label: 'Blocked' }
   ];
 
-  form = new FormGroup(
-    {
-      name: new FormControl('', { nonNullable: true, validators: [Validators.required] }),
-      status: new FormControl<WorkOrderStatusEnum | null>(null, {
-        nonNullable: true,
-        validators: [Validators.required],
-      }),
-      startDate: new FormControl<NgbDateStruct | null>(null, [Validators.required]),
-      endDate: new FormControl<NgbDateStruct | null>(null, [Validators.required]),
-    },
-    { validators: [this.dateOrderValidator.bind(this), this.overlapValidator.bind(this)] }
-  );
+  form = new FormGroup({
+    name: new FormControl('', { nonNullable: true, validators: [Validators.required] }),
+    status: new FormControl<WorkOrderStatusEnum | null>(null, [Validators.required]),
+    startDate: new FormControl<NgbDateStruct | null>(null, [Validators.required]),
+    endDate: new FormControl<NgbDateStruct | null>(null, [Validators.required]),
+  }, {
+    validators: [this.dateOrderValidator, this.validateWorkCenterOverlap.bind(this)]
+  });
 
-  ngOnInit() {
+  get isEditMode(): boolean {
+    return !!this.editingOrder;
+  }
+
+  ngOnInit(): void {
+    this.initializeForm();
+  }
+
+  private initializeForm(): void {
     if (this.editingOrder) {
       this.form.patchValue({
         name: this.editingOrder.name,
         status: this.editingOrder.status,
-        startDate: this.toNgbDateStruct(new Date(this.editingOrder.startDate)),
-        endDate: this.toNgbDateStruct(new Date(this.editingOrder.endDate)),
+        startDate: this.convertToNgbDateStruct(this.editingOrder.startDate),
+        endDate: this.convertToNgbDateStruct(this.editingOrder.endDate),
       });
-    } else if (this.startDate) {
+    } else if (this.initialStartDate) {
       this.form.patchValue({
-        startDate: this.toNgbDateStruct(new Date(this.startDate)),
+        startDate: this.convertToNgbDateStruct(this.initialStartDate),
       });
     }
   }
 
-  private toNgbDateStruct(date: Date): NgbDateStruct {
-    return {
-      year: date.getFullYear(),
-      month: date.getMonth() + 1,
-      day: date.getDate(),
-    };
+  private startCloseAnimation(payload?: WorkOrder): void {
+    this.isClosing = true;
+
+    setTimeout(() => {
+      this.modalService.close(payload);
+    }, 250);
   }
 
-  private ngbToIso(d: NgbDateStruct): string {
-    return `${d.year}-${String(d.month).padStart(2, '0')}-${String(d.day).padStart(2, '0')}`;
+  // region date utils
+  private convertToNgbDateStruct(date: Date | string): NgbDateStruct {
+    const d = new Date(date);
+    return { year: d.getFullYear(), month: d.getMonth() + 1, day: d.getDate() };
   }
 
+  private formatToIsoDateString(struct: NgbDateStruct): string {
+    return `${struct.year}-${String(struct.month).padStart(2, '0')}-${String(struct.day).padStart(2, '0')}`;
+  }
+  // endregion
+
+  // region validations
   private dateOrderValidator(group: AbstractControl): ValidationErrors | null {
-    const start = group.get('startDate')?.value as NgbDateStruct | null;
-    const end = group.get('endDate')?.value as NgbDateStruct | null;
+    const start = group.get('startDate')?.value as NgbDateStruct;
+    const end = group.get('endDate')?.value as NgbDateStruct;
+
     if (!start || !end) return null;
-    const sDate = new Date(start.year, start.month - 1, start.day);
-    const eDate = new Date(end.year, end.month - 1, end.day);
-    return eDate > sDate ? null : { dateOrder: true };
+
+    const startDate = new Date(start.year, start.month - 1, start.day);
+    const endDate = new Date(end.year, end.month - 1, end.day);
+
+    return endDate >= startDate ? null : { dateOrder: true };
   }
 
-  private overlapValidator(group: AbstractControl): ValidationErrors | null {
-    const wcId = group.get('workCenterId')?.value as string;
-    const start = group.get('startDate')?.value as NgbDateStruct | null;
-    const end = group.get('endDate')?.value as NgbDateStruct | null;
-    if (!wcId || !start || !end) return null;
+  private validateWorkCenterOverlap(group: AbstractControl): ValidationErrors | null {
+    const workCenterId = this.editingOrder?.workCenterId || this.workCenterId;
+    const startDateStruct = group.get('startDate')?.value;
+    const endDateStruct = group.get('endDate')?.value;
 
-    const startIso = this.ngbToIso(start);
-    const endIso = this.ngbToIso(end);
-    const excludeId = this.editingOrder?.id;
+    if (!workCenterId || !startDateStruct || !endDateStruct) return null;
 
-    return this.workOrderService.hasOverlap(wcId, startIso, endIso, excludeId) ? { overlap: true } : null;
+    const startDateIso = this.formatToIsoDateString(startDateStruct);
+    const endDateIso = this.formatToIsoDateString(endDateStruct);
+    const currentOrderId = this.editingOrder?.id;
+
+    const hasCollision = this.workOrderService.hasOverlap(
+      workCenterId,
+      startDateIso,
+      endDateIso,
+      currentOrderId
+    );
+
+    return hasCollision ? { workCenterOverlap: true } : null;
   }
+  // endregion
 
-  onClose(): void {
-    this.modalService.close();
-  }
-
+  // region public actions
   onSubmit(): void {
-    this.form.markAllAsTouched();
-    if (this.form.invalid) return;
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      return;
+    }
 
-    const val = this.form.getRawValue();
+    const raw = this.form.getRawValue();
 
-    const order = {
-      workCenterId: this.editingOrder ? this.editingOrder.workCenterId : this.workCenterId,
-      name: val.name,
-      status: val.status,
-      startDate: this.ngbToIso(val.startDate!),
-      endDate: this.ngbToIso(val.endDate!),
+    const payload = {
+      ...this.editingOrder,
+      workCenterId: this.editingOrder?.workCenterId || this.workCenterId!,
+      name: raw.name,
+      status: raw.status!,
+      startDate: this.formatToIsoDateString(raw.startDate!),
+      endDate: this.formatToIsoDateString(raw.endDate!),
     } as WorkOrder;
 
-    if (this.editingOrder && this.editingOrder.id)
-      order.id = this.editingOrder.id;
-
-    this.modalService.close(order);
+    this.startCloseAnimation(payload);
   }
+
+  closePanel(): void {
+    this.startCloseAnimation();
+  }
+  // endregion
 }

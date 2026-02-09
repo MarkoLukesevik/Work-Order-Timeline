@@ -1,44 +1,43 @@
-<app-base-modal>
-  <div class="panel panel--open">
-    <div class="panel__header">
-      <div>
-        <h2 class="panel__title">Work Order Details</h2>
-        <p class="panel__subtitle">Specify the dates, name and status for this order</p>
+<app-base-modal (onBackgroundClick)="closePanel()">
+  <div class="panel " [class.panel-closing]="isClosing" animate.enter="panel-slide-in">
+    <div class="panel-header">
+      <div class="panel-header__content">
+        <h2 class="panel-header__content-title">Work Order Details</h2>
+        <p class="panel-header__content-subtitle">Specify the dates, name and status for this order</p>
       </div>
 
-      <div class="panel__actions">
-        <button class="panel__btn panel__btn--ghost" (click)="onClose()">Cancel</button>
+      <div class="panel-header__actions">
+        <button class="panel-header__actions-button panel-header__actions-button__cancel" (click)="closePanel()">Cancel</button>
         <button
-          class="panel__btn panel__btn--primary"
+          class="panel-header__actions-button panel-header__actions-button__submit"
           (click)="onSubmit()"
-          [disabled]="form.invalid"
         >
-          {{ editingOrder ? 'Update' : 'Create' }}
+          {{ isEditMode ? 'Update' : 'Create' }}
         </button>
       </div>
     </div>
 
-    <form class="panel__form" [formGroup]="form" (ngSubmit)="onSubmit()">
-      <div class="panel__field">
-        <label class="panel__label" for="woName">Work Order Name</label>
+    <form class="panel-form" [formGroup]="form" (ngSubmit)="onSubmit()">
+      <div class="panel-form__field">
+        <label class="panel-form__field-label" for="woName">Work Order Name</label>
 
         <input
           id="woName"
-          class="panel__input"
-          [class.panel__input--error]="form.get('name')?.invalid && form.get('name')?.touched"
+          class="panel-form__field-input"
+          [class.panel-form__field-input__error]="form.get('name')?.invalid && form.get('name')?.touched"
           formControlName="name"
           placeholder="Enter work order name"
         />
 
         @if (form.get('name')?.hasError('required') && form.get('name')?.touched) {
-          <span class="panel__error">
-            Name is required
+          <span class="panel-form__field-error">
+            Name is required.
           </span>
         }
       </div>
 
-      <div class="panel__field">
-        <label class="panel__label">Status</label>
+      <div class="panel-form__field">
+        <label class="panel-form__field-label">Status</label>
 
         <ng-select
           formControlName="status"
@@ -51,19 +50,19 @@
         />
 
         @if (form.get('status')?.hasError('required') && form.get('status')?.touched) {
-          <span class="panel__error">
-            Status is required
+          <span class="panel-form__field-error">
+            Status is required.
           </span>
         }
       </div>
 
-      <div class="panel__field">
-        <label class="panel__label">Start Date</label>
+      <div class="panel-form__field">
+        <label class="panel-form__field-label">Start Date</label>
 
-        <div class="panel__date-wrapper">
+        <div class="panel-form__field-wrapper">
           <input
-            class="panel__input"
-            [class.panel__input--error]="form.get('startDate')?.invalid && form.get('startDate')?.touched"
+            class="panel-form__field-input panel-form__field-input__datepicker"
+            [class.panel-form__field-input__error]="form.get('startDate')?.invalid && form.get('startDate')?.touched"
             placeholder="Select start date"
             ngbDatepicker
             #dpStart="ngbDatepicker"
@@ -74,19 +73,19 @@
         </div>
 
         @if (form.get('startDate')?.hasError('required') && form.get('startDate')?.touched) {
-          <span class="panel__error">
-            Start date is required
+          <span class="panel-form__field-error">
+            Start date is required.
           </span>
         }
       </div>
 
-      <div class="panel__field">
-        <label class="panel__label">End Date</label>
+      <div class="panel-form__field">
+        <label class="panel-form__field-label">End Date</label>
 
         <div class="panel__date-wrapper">
           <input
-            class="panel__input"
-            [class.panel__input--error]="form.get('endDate')?.invalid && form.get('endDate')?.touched"
+            class="panel-form__field-input panel-form__field-input__datepicker"
+            [class.panel-form__field-input__error]="form.get('endDate')?.invalid && form.get('endDate')?.touched"
             placeholder="Select end date"
             ngbDatepicker
             #dpEnd="ngbDatepicker"
@@ -97,19 +96,19 @@
         </div>
 
         @if (form.get('endDate')?.hasError('required') && form.get('endDate')?.touched) {
-          <span class="panel__error">
-            End date is required
+          <span class="panel-form__field-error">
+            End date is required.
+          </span>
+        }
+
+        @if (form.hasError('dateOrder')) {
+          <span class="panel-form__field-error">
+            End date must be after start date.
           </span>
         }
       </div>
-
-      @if (form.hasError('dateOrder')) {
-        <div class="panel__error-box">
-          End date must be after start date.
-        </div>
-      }
-      @if (form.hasError('overlap')) {
-        <div class="panel__error-box panel__error-box--overlap">
+      @if (form.hasError('workCenterOverlap')) {
+        <div class="panel-form__error panel-form__error-box">
           This work order overlaps with an existing order on the same work center.
         </div>
       }
