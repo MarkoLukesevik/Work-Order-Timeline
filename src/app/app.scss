@@ -3,7 +3,7 @@
   flex-direction: column;
   row-gap: 45px;
 
-  padding-left: 100px;
+  padding-left: 1rem;
   height: 100dvh;
   background-color: rgba(255, 255, 255, 1);
 
@@ -27,6 +27,18 @@
       line-height: 34px;
       font-weight: 600;
     }
+  }
+}
+
+@media (min-width: 600px) {
+  .app {
+    padding-left: 50px;
+  }
+}
+
+@media (min-width: 992px) {
+  .app {
+    padding-left: 100px;
   }
 }
 

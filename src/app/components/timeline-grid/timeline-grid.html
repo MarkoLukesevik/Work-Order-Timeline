@@ -2,7 +2,7 @@
   <div class="timeline-grid__sidebar">
     <div class="timeline-grid__sidebar-header">Work Center</div>
     @for (workCenter of workCenters; track workCenter.id)  {
-      <div class="timeline-grid__sidebar-row">
+      <div class="timeline-grid__sidebar-row" [title]="workCenter.name">
         {{ workCenter.name }}
       </div>
     }
