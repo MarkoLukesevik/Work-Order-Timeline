@@ -6,13 +6,13 @@
 .timeline-grid {
   display: flex;
   flex: 1 1 auto;
-  border: 1px solid rgba(230, 235, 240, 1);
-  background: #ffffff;
+  border: 1px solid var(--base-border-color);
+  background-color: var(--base-white-color);
   overflow: hidden;
 
   &__sidebar {
-    border-right: 1px solid rgba(230, 235, 240, 1);
-    background: #ffffff;
+    border-right: 1px solid var(--base-border-color);
+    background-color: var(--base-white-color);
     z-index: 5;
 
     &-header {
@@ -21,7 +21,7 @@
 
       padding: 0.5rem 1rem;
       color: #687196;
-      border-bottom: 1px solid rgba(230, 235, 240, 1);
+      border-bottom: 1px solid var(--base-border-color);
 
       text-transform: capitalize;
       font-size: 0.875rem;
@@ -35,8 +35,8 @@
       width: 150px;
       padding: 1rem;
       height: 48px;
-      border-bottom: 1px solid rgba(230, 235, 240, 1);
-      color: rgba(3, 9, 41, 1);
+      border-bottom: 1px solid var(--base-border-color);
+      color: var(--base-text-dark-color);
 
       text-overflow: ellipsis;
       overflow: hidden;
@@ -58,7 +58,7 @@
         display: flex;
 
         border-bottom: 1px solid #e5e7eb;
-        background-color: #ffffff;
+        background-color: var(--base-white-color);
 
         &__column {
           position: relative;
@@ -70,7 +70,7 @@
           justify-content: center;
 
           padding: 0.5rem 1rem;
-          color: rgba(104, 113, 150, 1);
+          color: var(--base-text-gray-color);
 
           text-transform: capitalize;
           font-size: 0.875rem;
@@ -83,7 +83,7 @@
 
             border-radius: 5px;
             background-color: rgba(212, 215, 255, 1);
-            color: rgba(62, 64, 219, 1);
+            color: var(--base-primary-shade-color);
             padding: 0.125rem 0.5rem;
 
             font-size: 0.875rem;
@@ -106,7 +106,7 @@
           position: absolute;
           top: 0.25rem;
           bottom: 0.25rem;
-          border-right: 1px solid rgba(230, 235, 240, 1);
+          border-right: 1px solid var(--base-border-color);
           transition: background-color 0.1s linear;
 
           &-tooltip {
@@ -128,10 +128,10 @@
               display: flex;
 
               width: max-content;
-              box-shadow: 0 2px 4px -2px rgba(200, 207, 233, 1) , 0 0 16px -8px rgba(230, 235, 240, 1);
+              box-shadow: 0 2px 4px -2px rgba(200, 207, 233, 1) , 0 0 16px -8px var(--base-border-color);
               border-radius: 8px;
-              background-color: rgba(104, 113, 150, 1);
-              color: #ffffff;
+              background-color: var(--base-text-gray-color);
+              color: var(--base-white-color);
               padding: 0.25rem 0.5rem;
 
               font-size: 0.875rem;

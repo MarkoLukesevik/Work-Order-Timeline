@@ -47,7 +47,7 @@
     white-space: nowrap;
 
     &-name {
-      color: rgba(3, 9, 41, 1);
+      color: var(--base-text-dark-color);
       font-size: 0.875rem;
       font-weight: 400;
 
@@ -56,7 +56,6 @@
     }
 
     &-status {
-      color: rgba(8, 162, 104, 1);
       padding: 0.125rem 0.5rem;
       border-radius: 5px;
 
@@ -64,23 +63,23 @@
       font-weight: 400;
 
       &__open {
-        color: rgba(0, 176, 191, 1);
-        background-color: rgba(228, 253, 255, 1);
+        background-color: var(--base-open-status-background-color);
+        color: var(--base-open-status-color);
       }
 
       &__inprogress {
-        background-color: rgba(214, 216, 255, 1);
-        color: rgba(62, 64, 219, 1);
+        background-color: var(--base-in-progress-status-background-color);
+        color: var(--base-primary-shade-color);
       }
 
       &__completed {
-        background-color: rgba(225, 255, 204, 1);
-        color: rgba(8, 162, 104, 1);
+        background-color: var(--base-completed-status-background-color);
+        color: var(--base-completed-status-color);
       }
 
       &__blocked {
-        background-color: rgba(252, 238, 181, 1);
-        color: rgba(177, 54, 0, 1);
+        background-color: var(--base-blocked-status-background-color);
+        color: var(--base-blocked-status-color);
       }
     }
   }
@@ -89,10 +88,11 @@
     position: relative;
 
     &-button {
-      visibility: hidden;
+      display: flex;
       align-items: center;
       justify-content: center;
 
+      visibility: hidden;
       width: 24px;
       height: 22px;
       border: none;
@@ -100,6 +100,10 @@
       background-color: rgba(241, 243, 248, 1);
 
       cursor: pointer;
+
+      &:hover {
+        background-color: rgba(216, 220, 235, 1);
+      }
     }
 
     &-dropdown {
@@ -115,7 +119,7 @@
       padding: 0.75rem 0;
       box-shadow: 0 0 0 1px rgba(104, 113, 150, 0.1) , 0 2.5px 3px -1.5px rgba(200, 207, 233, 1) , 0 4.5px 5px -1px rgba(216, 220, 235, 1);
       border-radius: 5px;
-      background-color: rgba(255, 255, 255, 1);
+      background-color: var(--base-white-color);
 
       &__item {
         display: flex;
@@ -124,14 +128,14 @@
         border: none;
         background-color: transparent;
         padding: 0.25rem 0.75rem;
-        color: rgba(47, 48, 89, 1);
+        color: var(--base-text-color);
 
         font-size: 0.875rem;
         font-weight: 400;
         cursor: pointer;
 
         &-delete {
-          color: rgba(62, 64, 219, 1);
+          color: var(--base-primary-shade-color);
         }
       }
     }

@@ -3,7 +3,6 @@
   [ngClass]="['work-order__' + statusClass, menuOpen ? 'work-order__active' : '']"
   [style.left.%]="left"
   [style.width.%]="width"
-  (click)="onEdit($event)"
 >
   <div class="work-order__content">
     <span class="work-order__content-name">{{ order.name }}</span>

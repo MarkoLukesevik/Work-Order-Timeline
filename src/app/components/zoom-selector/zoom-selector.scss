@@ -12,7 +12,7 @@
   box-shadow: 1px 2.5px 3px -1.5px rgba(200, 207, 233, 1);
 
   &__label {
-    color: rgba(104, 113, 150, 1);
+    color: var(--base-text-gray-color);
     background-color: rgba(241, 243, 248, 0.75);
     padding: 0.5rem;
     border-bottom-left-radius: 5px;
@@ -20,6 +20,7 @@
 
     font-size: 0.875rem;
     font-weight: 500;
+    line-height: 1.25rem;
   }
 }
 
@@ -38,13 +39,6 @@
     border-bottom-right-radius: 5px;
     border-top-right-radius: 5px;
     padding: 0.5rem 2.25rem 0.5rem 0.5rem;
-    color: rgba(62, 64, 219, 1);
-  }
-
-  .ng-value {
-    font-size: 0.875rem;
-    font-weight: 600;
-    color: rgba(62, 64, 219, 1);
   }
 }
 
@@ -56,32 +50,5 @@
 
 :host ::ng-deep .zoom-selector__select .ng-arrow-wrapper {
   display: none;
-}
-
-:host ::ng-deep .ng-dropdown-panel {
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 100%;
-  margin-top: 0.25rem;
-
-  box-shadow: 0 0 0 1px rgba(104, 113, 150, 0.1) , 0 2.5px 3px -1.5px rgba(200, 207, 233, 1) , 0 4.5px 5px -1px rgba(216, 220, 235, 1);
-  border: none;
-  border-radius: 5px;
-  background-color: rgba(255, 255, 255, 1);
-  padding: 0.75rem 0;
-}
-
-:host ::ng-deep .ng-dropdown-panel .ng-option {
-  color: rgba(47, 48, 89, 1);
-  font-size: 14px;
-  font-weight: 400;
-  padding: 0.375rem 0.75rem;
-}
-
-:host ::ng-deep .ng-dropdown-panel .ng-option.ng-option-selected {
-  background-color: #ffffff;
-  color: rgba(62, 64, 219, 1) !important;
-  font-weight: 600;
 }
 

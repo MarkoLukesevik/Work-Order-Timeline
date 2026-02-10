@@ -1,10 +1,3 @@
-.panel-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.15);
-  z-index: 40;
-}
-
 .panel {
   position: fixed;
   top: 0;
@@ -18,7 +11,7 @@
   width: 590px;
   max-width: 100vw;
 
-  background: #ffffff;
+  background: var(--base-white-color);
   box-shadow: 0 5px 15px 0 rgba(216, 220, 235, 1), 0 2.5px 3px -1.5px rgba(200, 207, 233, 1), 0 4.5px 5px -1px rgba(216, 220, 235, 1);
   border-radius: 12px 0 0 12px;
 
@@ -36,7 +29,7 @@
     justify-content: space-between;
 
     padding: 1rem 1.5rem;
-    border-bottom: 1px solid rgba(230, 235, 240, 1);
+    border-bottom: 1px solid var(--base-border-color);
 
     &__content {
       display: flex;
@@ -44,7 +37,7 @@
       row-gap: 0.25rem;
 
       &-title {
-        color: rgba(47, 48, 89, 1);
+        color: var(--base-text-color);
         margin: 0;
         font-size: 1.25rem;
         font-weight: 500;
@@ -53,7 +46,7 @@
       &-subtitle {
         font-size: 1rem;
         margin: 0;
-        color: rgba(104, 113, 150, 1);
+        color: var(--base-text-gray-color);
       }
     }
 
@@ -71,15 +64,15 @@
         cursor: pointer;
 
         &__cancel {
-          box-shadow: 0 0 0 1px rgba(255, 255, 255, 1) , 0 1px 3px 0 rgba(200, 207, 233, 1);
-          background-color: rgba(255, 255, 255, 1);
-          color: rgba(47, 48, 89, 1);
+          box-shadow: 0 0 0 1px var(--base-white-color), 0 1px 3px 0 rgba(200, 207, 233, 1);
+          background-color: var(--base-white-color);
+          color: var(--base-text-color);
         }
 
         &__submit {
-          box-shadow: 0 0 0 1px rgba(86, 89, 255, 1) , 0 1px 3px 0 rgba(200, 207, 233, 1);
-          background-color: rgba(86, 89, 255, 1);
-          color: #ffffff;
+          box-shadow: 0 0 0 1px var(--base-blue-color) , 0 1px 3px 0 rgba(200, 207, 233, 1);
+          background-color: var(--base-blue-color);
+          color: var(--base-white-color);
         }
       }
     }
@@ -100,7 +93,7 @@
       row-gap: 0.5rem;
 
       &-label {
-        color: rgba(104, 113, 150, 1);
+        color: var(--base-text-gray-color);
         font-size: 0.875rem;
         font-weight: 500;
       }
@@ -114,23 +107,23 @@
         align-items: center;
 
         &__open {
-          color: rgba(0, 176, 191, 1);
-          background-color: rgba(228, 253, 255, 1);
+          color: var(--base-open-status-color);
+          background-color: var(--base-open-status-background-color);
         }
 
         &__inprogress {
-          background-color: rgba(214, 216, 255, 1);
-          color: rgba(62, 64, 219, 1);
+          background-color: var(--base-in-progress-status-background-color);
+          color: var(--base-primary-shade-color);
         }
 
         &__completed {
-          background-color: rgba(225, 255, 204, 1);
-          color: rgba(8, 162, 104, 1);
+          background-color: var(--base-completed-status-background-color);
+          color: var(--base-completed-status-color);
         }
 
         &__blocked {
-          background-color: rgba(252, 238, 181, 1);
-          color: rgba(177, 54, 0, 1);
+          background-color: var(--base-blocked-status-background-color);
+          color: var(--base-blocked-status-color);
         }
       }
 
@@ -144,7 +137,7 @@
         box-shadow: 0 0 0 1px rgba(216, 220, 235, 1), 0 1.5px 3px -1.5px rgba(200, 207, 233, 1), 0 1px 0.5px -1px rgba(216, 220, 235, 1);
         border-radius: 5px;
         border: none;
-        color: rgba(3, 9, 41, 1);
+        color: var(--base-text-dark-color);
 
         font-size: 0.875rem;
         font-weight: 500;
@@ -158,19 +151,19 @@
         }
 
         &__error {
-          border-color: #ef4444;
+          border-color: var(--base-red-color);
         }
       }
 
       &-error {
         font-size: 0.875rem;
-        color: #ef4444;
+        color: var(--base-red-color);
       }
     }
 
     &__error {
       font-size: 0.875rem;
-      color: #ef4444;
+      color: var(--base-red-color);
     }
   }
 }
@@ -180,7 +173,7 @@
   .ng-select.ng-select-focused .ng-select-container {
     border: none;
     box-shadow: 0 0 0 2px rgba(170, 175, 255, 1);
-    background-color: rgba(255, 255, 255, 1);
+    background-color: var(--base-white-color);
     border-radius: 5px;
   }
 }
