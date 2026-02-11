@@ -34,15 +34,17 @@
           }
         </div>
 
-        @for (workCenter of workCenters; track workCenter.id) {
+        @for (workCenter of workCenters; track workCenter.id; let isLast = $last) {
           <div
             class="timeline-content__main-canvas__row"
+            [class.timeline-content__main-canvas__row-last]="isLast"
           >
             @for (column of columns; track column.label; let i = $index) {
               <div
                 class="timeline-content__main-canvas__row-column"
                 [style.left.px]="i * columnPixelWidth"
                 [style.width.px]="columnPixelWidth"
+                [class.is-current]="column.isCurrentPeriod"
                 (click)="onColumnClick(workCenter, column, $event)"
               >
                 <div class="timeline-content__main-canvas__row-column__tooltip">

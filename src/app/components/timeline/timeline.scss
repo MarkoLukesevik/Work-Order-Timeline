@@ -68,12 +68,22 @@
     }
 
     &__main {
+      display: flex;
+      flex-direction: column;
       flex: 1 1 auto;
-      overflow-x: auto;
-      overflow-y: hidden;
+
       background-color: rgba(247, 249, 252, 1);
 
+      overflow-x: auto;
+      overflow-y: hidden;
+
       &-canvas {
+        display: flex;
+        flex-direction: column;
+        flex: 1 1 auto;
+
+        padding-bottom: 35px;
+
         &__header {
           display: flex;
 
@@ -118,16 +128,25 @@
           cursor: pointer;
           transition: all 0.1s linear;
 
+          &-last {
+            flex: 1 1 auto;
+            border-bottom: none;
+          }
+
           &:hover {
             background-color: rgba(238, 240, 255, 1);
           }
 
           &-column {
             position: absolute;
-            top: 0.25rem;
-            bottom: 0.25rem;
+            top: 0;
+            bottom: 0;
             border-right: 1px solid var(--base-border-color);
             transition: background-color 0.1s linear;
+
+            &.is-current {
+              border-left: 3px solid rgba(212, 215, 255, 1);
+            }
 
             &__tooltip {
               display: none;
