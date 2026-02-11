@@ -4,16 +4,16 @@ import { NgOptimizedImage } from '@angular/common';
 import { WorkOrderService } from './services/work-order-service/work-order.service';
 import { ModalService } from './services/modal-service/modal-service';
 
-import { TimelineGrid } from './components/timeline-grid/timeline-grid';
 import { ZoomSelector } from './components/zoom-selector/zoom-selector';
 import { WorkOrderPanel } from './components/work-order-panel/work-order-panel';
+import { Timeline } from './components/timeline/timeline';
 
 import WorkOrder from './models/work-order';
 import { ZoomLevelEnum } from './enums/zoom-level';
 
 @Component({
   selector: 'app-root',
-  imports: [TimelineGrid, ZoomSelector, NgOptimizedImage],
+  imports: [ZoomSelector, NgOptimizedImage, Timeline],
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })

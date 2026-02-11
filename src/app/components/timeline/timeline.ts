@@ -22,14 +22,14 @@ import BarPosition from '../../models/bar-position';
 import { ZoomLevelEnum } from '../../enums/zoom-level';
 
 @Component({
-  selector: 'app-timeline-grid',
+  selector: 'app-timeline',
   imports: [
     WorkOrderBar
   ],
-  templateUrl: './timeline-grid.html',
-  styleUrl: './timeline-grid.scss',
+  templateUrl: './timeline.html',
+  styleUrl: './timeline.scss',
 })
-export class TimelineGrid implements OnInit, OnChanges, AfterViewInit {
+export class Timeline implements OnInit, OnChanges, AfterViewInit {
   @Input() zoom: ZoomLevelEnum = ZoomLevelEnum.MONTH;
   @Input() workCenters: WorkCenter[] = [];
   @Input() orders: WorkOrder[] = [];
@@ -62,7 +62,6 @@ export class TimelineGrid implements OnInit, OnChanges, AfterViewInit {
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['zoom'] && !changes['zoom'].firstChange) {
       this.rebuildTimeline();
-      setTimeout(() => this.scrollToCurrentTimePeriod(), 0);
     }
   }
 
@@ -83,7 +82,7 @@ export class TimelineGrid implements OnInit, OnChanges, AfterViewInit {
     );
   }
 
-  private scrollToCurrentTimePeriod(): void {
+  scrollToCurrentTimePeriod(): void {
     if (!this.scrollContainerElement) return;
 
     const scrollElement = this.scrollContainerElement.nativeElement;

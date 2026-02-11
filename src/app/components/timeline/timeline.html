@@ -1,0 +1,69 @@
+<div class="timeline">
+  <div class="timeline-header">
+    <button class="timeline-header__button" (click)="scrollToCurrentTimePeriod()">Today</button>
+  </div>
+
+  <div class="timeline-content">
+    <div class="timeline-content__sidebar">
+      <div class="timeline-content__sidebar-header">Work Center</div>
+      @for (workCenter of workCenters; track workCenter.id)  {
+        <div class="timeline-content__sidebar-row" [title]="workCenter.name">
+          {{ workCenter.name }}
+        </div>
+      }
+    </div>
+
+    <div class="timeline-content__main" #scrollContainer>
+      <div
+        class="timeline-content__main-canvas"
+        [style.width.px]="columns.length * columnPixelWidth"
+      >
+        <div class="timeline-content__main-canvas__header">
+          @for (column of columns; track column.label) {
+            <div
+              class="timeline-content__main-canvas__header-column"
+              [style.width.px]="columnPixelWidth"
+            >
+              @if (column.isCurrentPeriod) {
+                <span class="timeline-content__main-canvas__header-column__current-badge">
+                  Current {{ zoom === ZoomLevelEnum.DAY ? 'day' : zoom === ZoomLevelEnum.WEEK ? 'week' : 'month' }}
+                </span>
+              }
+              {{ column.label }}
+            </div>
+          }
+        </div>
+
+        @for (workCenter of workCenters; track workCenter.id) {
+          <div
+            class="timeline-content__main-canvas__row"
+          >
+            @for (column of columns; track column.label; let i = $index) {
+              <div
+                class="timeline-content__main-canvas__row-column"
+                [style.left.px]="i * columnPixelWidth"
+                [style.width.px]="columnPixelWidth"
+                (click)="onColumnClick(workCenter, column, $event)"
+              >
+                <div class="timeline-content__main-canvas__row-column__tooltip">
+                  Click to add dates
+                </div>
+              </div>
+            }
+            @for (workOrder of getOrdersForWorkCenter(workCenter.id); track workOrder.id) {
+              <app-work-order-bar
+                [order]="workOrder"
+                [left]="getWorkOrderBarPosition(workOrder).left"
+                [width]="getWorkOrderBarPosition(workOrder).width"
+                (edit)="editOrder.emit($event)"
+                (delete)="deleteOrder.emit($event)"
+              />
+            }
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+</div>
+
+

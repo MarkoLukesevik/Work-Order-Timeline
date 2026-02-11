@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { TimelineGrid } from './timeline-grid';
+import { Timeline } from './timeline';
 
 describe('TimelineGrid', () => {
-  let component: TimelineGrid;
-  let fixture: ComponentFixture<TimelineGrid>;
+  let component: Timeline;
+  let fixture: ComponentFixture<Timeline>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [TimelineGrid]
+      imports: [Timeline]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(TimelineGrid);
+    fixture = TestBed.createComponent(Timeline);
     component = fixture.componentInstance;
     await fixture.whenStable();
   });
