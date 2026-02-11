@@ -1,4 +1,4 @@
-import { Component, inject, Input, OnInit } from '@angular/core';
+import {Component, inject, Input, OnInit} from '@angular/core';
 import {
   AbstractControl,
   FormControl,
@@ -7,16 +7,16 @@ import {
   ValidationErrors,
   Validators
 } from '@angular/forms';
-import { NgbDatepickerModule, NgbDateStruct, NgbInputDatepicker } from '@ng-bootstrap/ng-bootstrap';
-import { NgSelectModule } from '@ng-select/ng-select';
+import {NgbDatepickerModule, NgbDateStruct, NgbInputDatepicker} from '@ng-bootstrap/ng-bootstrap';
+import {NgSelectModule} from '@ng-select/ng-select';
 
-import { WorkOrderService } from '../../services/work-order-service/work-order.service';
-import { ModalService } from '../../services/modal-service/modal-service';
+import {WorkOrderService} from '../../services/work-order-service/work-order.service';
+import {ModalService} from '../../services/modal-service/modal-service';
 
-import { BaseModal } from '../../base-components/base-modal/base-modal';
+import {BaseModal} from '../../base-components/base-modal/base-modal';
 
 import WorkOrder from '../../models/work-order';
-import { WorkOrderStatusEnum } from '../../enums/work-order-status';
+import {WorkOrderStatusEnum} from '../../enums/work-order-status';
 
 @Component({
   selector: 'app-work-order-panel',
@@ -73,8 +73,12 @@ export class WorkOrderPanel implements OnInit {
         endDate: this.convertToNgbDateStruct(this.editingOrder.endDate),
       });
     } else if (this.initialStartDate) {
+      const preFilledEndDate = new Date(this.initialStartDate)
+      preFilledEndDate.setDate(preFilledEndDate.getDate() + 7)
       this.form.patchValue({
         startDate: this.convertToNgbDateStruct(this.initialStartDate),
+        endDate: this.convertToNgbDateStruct(preFilledEndDate),
+        status: WorkOrderStatusEnum.OPEN
       });
     }
   }
