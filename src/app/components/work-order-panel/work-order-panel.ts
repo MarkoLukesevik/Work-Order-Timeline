@@ -1,4 +1,4 @@
-import { Component, inject, Input, OnInit } from '@angular/core';
+import {Component, ElementRef, HostListener, inject, Input, OnInit, ViewChild} from '@angular/core';
 import {
   AbstractControl,
   FormControl,
@@ -35,6 +35,9 @@ export class WorkOrderPanel implements OnInit {
   @Input() workCenterId: string | null = null;
   @Input() initialStartDate: Date | null = null;
 
+  @ViewChild('firstElement') firstElement!: ElementRef;
+  @ViewChild('lastElement') lastElement!: ElementRef;
+
   private readonly workOrderService: WorkOrderService = inject(WorkOrderService);
   private readonly modalService: ModalService = inject(ModalService);
 
@@ -58,6 +61,19 @@ export class WorkOrderPanel implements OnInit {
 
   get isEditMode(): boolean {
     return !!this.editingOrder;
+  }
+
+  @HostListener('keydown', ['$event'])
+  handleKeyDown(event: KeyboardEvent): void {
+    if (event.key === 'Tab') {
+      const first = this.firstElement.nativeElement;
+      const last = this.lastElement.nativeElement;
+
+      if (document.activeElement === last) {
+        first.focus();
+        event.preventDefault();
+      }
+    }
   }
 
   ngOnInit(): void {

@@ -1,13 +1,21 @@
 <app-base-modal (handleCloseModal)="closePanel()">
-  <div class="panel " [class.panel-closing]="isClosing" animate.enter="panel-slide-in">
+  <div
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="work-order-title"
+    animate.enter="panel-slide-in"
+    class="panel"
+    [class.panel-closing]="isClosing"
+  >
     <div class="panel-header">
       <div class="panel-header__content">
-        <h2 class="panel-header__content-title">Work Order Details</h2>
+        <h2 id="work-order-title" class="panel-header__content-title">Work Order Details</h2>
         <p class="panel-header__content-subtitle">Specify the dates, name and status for this order</p>
       </div>
 
       <div class="panel-header__actions">
         <button
+          #firstElement
           class="panel-header__actions-button panel-header__actions-button__cancel"
           (click)="closePanel()">
           Cancel
@@ -24,10 +32,18 @@
 
     <form class="panel-form" [formGroup]="form" (ngSubmit)="onSubmit()">
       <div class="panel-form__field">
-        <label class="panel-form__field-label" for="woName">Work Order Name</label>
+        <label
+          class="panel-form__field-label"
+          for="workOrderName"
+        >
+          Work Order Name
+        </label>
 
         <input
-          id="woName"
+          id="workOrderName"
+          aria-required="true"
+          [attr.aria-invalid]="form.get('name')?.invalid && form.get('name')?.touched"
+          [attr.aria-describedby]="form.get('name')?.invalid && form.get('name')?.touched ? 'name-error' : null"
           class="panel-form__field-input"
           [class.panel-form__field-input__error]="form.get('name')?.invalid && form.get('name')?.touched"
           formControlName="name"
@@ -35,16 +51,23 @@
         />
 
         @if (form.get('name')?.hasError('required') && form.get('name')?.touched) {
-          <span class="panel-form__field-error">
+          <span
+            id="name-error"
+            aria-live="polite"
+            class="panel-form__field-error"
+          >
             Name is required.
           </span>
         }
       </div>
 
       <div class="panel-form__field">
-        <label class="panel-form__field-label">Status</label>
+        <label id="status-label" class="panel-form__field-label">Status</label>
 
         <ng-select
+          aria-labelledby="status-label"
+          [attr.aria-describedby]="form.get('status')?.invalid && form.get('status')?.touched ? 'status-error' : null"
+          [attr.aria-invalid]="form.get('status')?.invalid && form.get('status')?.touched"
           formControlName="status"
           [items]="statusOptions"
           bindLabel="label"
@@ -65,18 +88,25 @@
 
 
         @if (form.get('status')?.hasError('required') && form.get('status')?.touched) {
-          <span class="panel-form__field-error">
+          <span
+            id="status-error"
+            class="panel-form__field-error"
+            aria-live="polite"
+          >
             Status is required.
           </span>
         }
       </div>
 
       <div class="panel-form__field">
-        <label class="panel-form__field-label">Start Date</label>
+        <label for="startDate" class="panel-form__field-label">Start Date</label>
 
         <div class="panel-form__field-wrapper">
           <input
+            id="startDate"
             class="panel-form__field-input panel-form__field-input__datepicker"
+            [attr.aria-describedby]="form.get('startDate')?.invalid && form.get('startDate')?.touched ? 'start-date-error' : null"
+            [attr.aria-invalid]="form.get('startDate')?.invalid && form.get('startDate')?.touched"
             [class.panel-form__field-input__error]="form.get('startDate')?.invalid && form.get('startDate')?.touched"
             placeholder="Select start date"
             ngbDatepicker
@@ -89,17 +119,25 @@
         </div>
 
         @if (form.get('startDate')?.hasError('required') && form.get('startDate')?.touched) {
-          <span class="panel-form__field-error">
+          <span
+            id="start-date-error"
+            class="panel-form__field-error"
+            aria-live="polite"
+          >
             Start date is required.
           </span>
         }
       </div>
 
       <div class="panel-form__field">
-        <label class="panel-form__field-label">End Date</label>
+        <label for="endDate" class="panel-form__field-label">End Date</label>
 
         <div class="panel__date-wrapper">
           <input
+            #lastElement
+            id="endDate"
+            [attr.aria-invalid]="(form.get('endDate')?.invalid && form.get('endDate')?.touched) || form.hasError('dateOrder')"
+            [attr.aria-describedby]="(form.get('endDate')?.touched && form.get('endDate')?.invalid ? 'end-error ' : '') + (form.hasError('dateOrder') ? 'date-order-error' : '')"
             class="panel-form__field-input panel-form__field-input__datepicker"
             [class.panel-form__field-input__error]="form.get('endDate')?.invalid && form.get('endDate')?.touched"
             placeholder="Select end date"
@@ -113,19 +151,31 @@
         </div>
 
         @if (form.get('endDate')?.hasError('required') && form.get('endDate')?.touched) {
-          <span class="panel-form__field-error">
+          <span
+            id="end-error"
+            class="panel-form__field-error"
+            aria-live="polite"
+          >
             End date is required.
           </span>
         }
 
         @if (form.hasError('dateOrder')) {
-          <span class="panel-form__field-error">
+          <span
+            id="date-order-error"
+            aria-live="polite"
+            class="panel-form__field-error"
+          >
             End date must be after start date.
           </span>
         }
       </div>
       @if (form.hasError('workCenterOverlap')) {
-        <div class="panel-form__error panel-form__error-box">
+        <div
+          role="alert"
+          aria-live="polite"
+          class="panel-form__error panel-form__error-box"
+        >
           This work order overlaps with an existing order on the same work center.
         </div>
       }
