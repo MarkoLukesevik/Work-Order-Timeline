@@ -1,4 +1,4 @@
-<div class="modal-overlay" (click)="onBackgroundClick.emit()">
+<div class="modal-overlay" (click)="handleCloseModal.emit()">
   <div class="modal-overlay__content" (click)="$event.stopPropagation()">
     <ng-content></ng-content>
   </div>

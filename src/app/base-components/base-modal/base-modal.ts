@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, HostListener, Output } from '@angular/core';
 
 @Component({
   selector: 'app-base-modal',
@@ -7,5 +7,11 @@ import { Component, EventEmitter, Output } from '@angular/core';
   styleUrl: './base-modal.scss',
 })
 export class BaseModal {
-  @Output() onBackgroundClick: EventEmitter<any> = new EventEmitter();
+  @Output() handleCloseModal: EventEmitter<any> = new EventEmitter();
+
+  @HostListener('document:keydown.escape', ['$event'])
+  onEscPressed(event: Event): void {
+    event.preventDefault();
+    this.handleCloseModal.emit();
+  }
 }

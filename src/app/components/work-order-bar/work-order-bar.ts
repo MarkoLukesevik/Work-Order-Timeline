@@ -1,5 +1,5 @@
 import { Component, ElementRef, EventEmitter, HostListener, Input, Output } from '@angular/core';
-import {NgClass, NgOptimizedImage} from '@angular/common';
+import { NgClass, NgOptimizedImage } from '@angular/common';
 
 import WorkOrder from '../../models/work-order';
 import { WorkOrderStatusEnum } from '../../enums/work-order-status';

@@ -1,4 +1,4 @@
-<app-base-modal (onBackgroundClick)="closePanel()">
+<app-base-modal (handleCloseModal)="closePanel()">
   <div class="panel " [class.panel-closing]="isClosing" animate.enter="panel-slide-in">
     <div class="panel-header">
       <div class="panel-header__content">
@@ -7,7 +7,12 @@
       </div>
 
       <div class="panel-header__actions">
-        <button class="panel-header__actions-button panel-header__actions-button__cancel" (click)="closePanel()">Cancel</button>
+        <button
+          class="panel-header__actions-button panel-header__actions-button__cancel"
+          (click)="closePanel()">
+          Cancel
+        </button>
+
         <button
           class="panel-header__actions-button panel-header__actions-button__submit"
           (click)="onSubmit()"
@@ -49,7 +54,10 @@
           [searchable]="false"
         >
           <ng-template ng-label-tmp let-item="item">
-            <div class="panel-form__field-status" [class]="'panel-form__field-status__' + item.label.toLowerCase().replace(' ', '')">
+            <div
+              class="panel-form__field-status"
+              [class]="'panel-form__field-status__' + item.label.toLowerCase().replace(' ', '')"
+            >
               {{ item.label }}
             </div>
           </ng-template>
@@ -74,8 +82,9 @@
             ngbDatepicker
             #dpStart="ngbDatepicker"
             formControlName="startDate"
-            (click)="dpStart.toggle()"
             readonly
+            (click)="dpStart.toggle()"
+            (keydown.enter)="dpStart.toggle()"
           />
         </div>
 
@@ -97,8 +106,9 @@
             ngbDatepicker
             #dpEnd="ngbDatepicker"
             formControlName="endDate"
-            (click)="dpEnd.toggle()"
             readonly
+            (click)="dpEnd.toggle()"
+            (keydown.enter)="dpEnd.toggle()"
           />
         </div>
 
