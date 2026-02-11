@@ -1,18 +1,27 @@
 <div
   class="work-order"
-  [ngClass]="['work-order__' + statusClass, menuOpen ? 'work-order__active' : '']"
+  [class]="'work-order__' + statusClass"
+  [class.work-order__active]="menuOpen"
   [style.left.%]="left"
   [style.width.%]="width"
 >
+  <div class="work-order__tooltip">
+    {{ order.name }} {{ statusText(order.status) }} {{ order.startDate }} - {{ order.endDate }}
+  </div>
+
   <div class="work-order__content">
     <span class="work-order__content-name">{{ order.name }}</span>
-    <span class="work-order__content-status" [ngClass]="'work-order__content-status__' + statusClass">
+    <span
+      class="work-order__content-status"
+      [class]="'work-order__content-status__' + statusClass"
+    >
       {{ statusText(order.status) }}
     </span>
   </div>
 
-  <div class="work-order__actions">
 
+
+  <div class="work-order__actions">
     <button
       class="work-order__actions-button"
       aria-label="Work order actions"
@@ -28,8 +37,19 @@
 
     @if (menuOpen) {
       <div class="work-order__actions-dropdown">
-        <button class="work-order__actions-dropdown__item" (click)="onEdit($event)">Edit</button>
-        <button class="work-order__actions-dropdown__item work-order__actions-dropdown__item-delete" (click)="onDelete($event)">Delete</button>
+        <button
+          class="work-order__actions-dropdown__item"
+          (click)="onEdit($event)"
+        >
+          Edit
+        </button>
+
+        <button
+          class="work-order__actions-dropdown__item work-order__actions-dropdown__item-delete"
+          (click)="onDelete($event)"
+        >
+          Delete
+        </button>
       </div>
     }
   </div>

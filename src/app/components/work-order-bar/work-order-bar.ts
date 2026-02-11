@@ -1,15 +1,12 @@
 import { Component, ElementRef, EventEmitter, HostListener, Input, Output } from '@angular/core';
-import { NgClass, NgOptimizedImage } from '@angular/common';
+import { NgOptimizedImage } from '@angular/common';
 
 import WorkOrder from '../../models/work-order';
 import { WorkOrderStatusEnum } from '../../enums/work-order-status';
 
 @Component({
   selector: 'app-work-order-bar',
-  imports: [
-    NgClass,
-    NgOptimizedImage
-  ],
+  imports: [NgOptimizedImage],
   templateUrl: './work-order-bar.html',
   styleUrl: './work-order-bar.scss',
 })
