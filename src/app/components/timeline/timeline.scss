@@ -128,11 +128,6 @@
           cursor: pointer;
           transition: all 0.1s linear;
 
-          &-last {
-            flex: 1 1 auto;
-            border-bottom: none;
-          }
-
           &:hover {
             background-color: rgba(238, 240, 255, 1);
           }
@@ -144,7 +139,7 @@
             border-right: 1px solid var(--base-border-color);
             transition: background-color 0.1s linear;
 
-            &.is-current {
+            &__is-current {
               border-left: 3px solid rgba(212, 215, 255, 1);
             }
 
@@ -176,6 +171,23 @@
                 font-size: 0.875rem;
                 font-weight: 400;
               }
+            }
+          }
+        }
+
+        &__filler {
+          position: relative;
+          flex: 1 1 auto;
+          pointer-events: none;
+
+          &-column {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            border-right: 1px solid var(--base-border-color);
+
+            &__is-current {
+              border-left: 3px solid rgba(212, 215, 255, 1);
             }
           }
         }
