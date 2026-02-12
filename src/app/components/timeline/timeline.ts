@@ -70,6 +70,10 @@ export class Timeline implements OnInit, OnChanges, AfterViewInit {
     this.attachInfiniteScrollListener();
   }
 
+  /** * WHAT: Rebuilds the timeline grid whenever the zoom level or data changes.
+   * HOW: Calculates the initial date range and triggers the column generation
+   * logic to ensure the UI scale matches the selected Timescale (Day/Week/Month).
+   */
   private rebuildTimeline(): void {
     const { start, end } = this.timelineUtilService.getInitialRange(this.zoom);
     this.timelineRangeStartDate = start;
@@ -82,6 +86,10 @@ export class Timeline implements OnInit, OnChanges, AfterViewInit {
     );
   }
 
+  /** * WHAT: Centers the current time period in the viewport.
+   * HOW: Finds the 'Current' column index, calculates its absolute pixel offset,
+   * and adjusts scrollLeft by subtracting half the viewport width for better UX orientation.
+   */
   scrollToCurrentTimePeriod(): void {
     if (!this.scrollContainerElement) return;
 
@@ -108,15 +116,15 @@ export class Timeline implements OnInit, OnChanges, AfterViewInit {
     });
   }
 
-  /**
-   * Detects when the user is near the edges of the timeline and extends the dates.
+  /** * WHAT: Handles range extension for infinite scrolling.
+   * HOW: Runs outside Angular's zone for performance; detects when scroll nears
+   * boundary thresholds and triggers date prepending/appending to the range.
    */
   private handleGridScroll(): void {
     const scrollElement = this.scrollContainerElement.nativeElement;
     const scrollActivationThreshold = 300;
     const columnsToExtendCount = this.timelineUtilService.getExtensionCount(this.zoom);
 
-    // Logic for extending the timeline into the past (Left)
     if (scrollElement.scrollLeft < scrollActivationThreshold) {
       const previousTotalWidth = this.columns.length * this.columnPixelWidth;
 
@@ -134,12 +142,10 @@ export class Timeline implements OnInit, OnChanges, AfterViewInit {
 
       const newTotalWidth = this.columns.length * this.columnPixelWidth;
 
-      // Maintain the user's visual position by adjusting scroll after prepending columns
       scrollElement.scrollLeft += (newTotalWidth - previousTotalWidth);
       this.ngZone.run(() => this.changeDetector.markForCheck());
     }
 
-    // Logic for extending the timeline into the future (Right)
     const remainingScrollRight = scrollElement.scrollWidth - scrollElement.clientWidth - scrollElement.scrollLeft;
     if (remainingScrollRight < scrollActivationThreshold) {
       this.timelineRangeEndDate = this.timelineUtilService.extendRight(
@@ -162,6 +168,10 @@ export class Timeline implements OnInit, OnChanges, AfterViewInit {
     return this.orders.filter(o => o.workCenterId === workCenterId);
   }
 
+  /** * WHAT: Determines the visual coordinates for a work order bar.
+   * HOW: Calculates the total timeline duration and delegates the math to the
+   * timeline service to find the percentage-based 'left' and 'width' relative to the start date.
+   */
   getWorkOrderBarPosition(workOrder: WorkOrder): BarPosition {
     const timelineDurationInMs = this.timelineRangeEndDate.getTime() - this.timelineRangeStartDate.getTime();
 
@@ -173,6 +183,10 @@ export class Timeline implements OnInit, OnChanges, AfterViewInit {
     );
   }
 
+  /** * WHAT: Maps a UI click to a specific date for new order creation.
+   * HOW: Calculates the horizontal percentage of the click inside a column and
+   * interpolates the exact Date based on the granularity of the current zoom level.
+   */
   onColumnClick(workCenter: WorkCenter, column: TimelineColumn, event: MouseEvent): void {
     const target = event.target as HTMLElement;
     if (target.closest('app-work-order-bar') || target.closest('.work-order')) return;

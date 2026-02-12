@@ -24,8 +24,15 @@ export class App {
   readonly workCenters = this.workOrderService.workCenters;
   readonly orders = this.workOrderService.orders;
 
+  // WHAT: Reactive state for the current timescale.
+  // HOW: Managed via a Signal to ensure that when the zoom changes, all
+  // dependent timeline calculations re-run automatically.
   zoom = signal<ZoomLevelEnum>(ZoomLevelEnum.MONTH);
 
+  /** * WHAT: Launches the creation flow for a new work order.
+   * HOW: Opens the dynamic WorkOrderPanel with context-specific data and
+   * subscribes to the result to add a new record to the centralized state.
+   */
   openCreatePanel(workCenterId: string, date: Date): void {
     this.modalService
       .open(WorkOrderPanel, {
@@ -40,6 +47,10 @@ export class App {
       });
   }
 
+  /** * WHAT: Launches the edit flow for an existing work order.
+   * HOW: Opens the dynamic WorkOrderPanel with existing order data and
+   * subscribes to the result to update the record in the centralized state.
+   */
   openEditPanel(order: WorkOrder): void {
     this.modalService
       .open(WorkOrderPanel, {
@@ -53,6 +64,10 @@ export class App {
       });
   }
 
+  /** * WHAT: Orchestrates order removal from the UI.
+   * HOW: Delegates the deletion to the WorkOrderService, which handles
+   * state updates and local storage persistence.
+   */
   onDeleteOrder(orderId: string): void {
     this.workOrderService.deleteOrder(orderId);
   }

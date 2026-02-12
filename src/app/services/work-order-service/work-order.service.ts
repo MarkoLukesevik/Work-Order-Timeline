@@ -64,6 +64,10 @@ export class WorkOrderService {
   readonly workCenters: WorkCenter[] = DEFAULT_WORK_CENTERS;
   readonly orders = signal<WorkOrder[]>(this.loadOrders());
 
+  /** * WHAT: Hydrates the initial work order state.
+   * HOW: Checks for type safety (typeof localStorage), then attempts to parse
+   * persisted data, falling back to SEED_ORDERS if storage is empty or corrupt.
+   */
   private loadOrders(): WorkOrder[] {
     if (typeof localStorage === 'undefined') return SEED_ORDERS;
 
@@ -90,6 +94,10 @@ export class WorkOrderService {
     return this.orders().filter(wordOrder => wordOrder.workCenterId === workCenterId);
   }
 
+  /** * WHAT: Validates scheduling conflicts for a specific work center.
+   * HOW: Performs an interval intersection check (StartA < EndB && EndA > StartB)
+   * across existing orders, ignoring the order being edited via its ID.
+   */
   hasOverlap(
     workCenterId: string,
     newOrderStartDate: string,
@@ -120,9 +128,13 @@ export class WorkOrderService {
     });
   }
 
+  /** * WHAT: Adds a new work order to the system.
+   * HOW: Generates a cryptographically strong unique ID using the native Web Crypto API,
+   * then updates the Signal state immutably to trigger efficient UI re-renders.
+   */
   addOrder(newOrderData: Omit<WorkOrder, 'id'>): void {
     this.orders.update(currentOrders => {
-      const generatedOrderId = 'wo_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8);
+      const generatedOrderId = crypto.randomUUID();
       const newWorkOrder: WorkOrder = {
         ...newOrderData,
         id: generatedOrderId
@@ -138,6 +150,10 @@ export class WorkOrderService {
     })
   }
 
+  /** * WHAT: Updates the details of an existing work order.
+   * HOW: Maps through the current state to replace the matching ID with
+   * new data, followed by a persistence call to save the updated state.
+   */
   updateOrder(updatedOrder: WorkOrder): void {
     this.orders.update(currentOrders => {
       const updatedOrdersList = currentOrders.map(existingOrder =>
@@ -151,6 +167,10 @@ export class WorkOrderService {
     });
   }
 
+  /** * WHAT: Removes a work order from the schedule.
+   * HOW: Filters the Signal state to exclude the target ID and updates
+   * localStorage to reflect the removal across refreshes.
+   */
   deleteOrder(orderIdToDelete: string): void {
     this.orders.update(currentOrders => {
       const updatedOrdersList = currentOrders.filter(

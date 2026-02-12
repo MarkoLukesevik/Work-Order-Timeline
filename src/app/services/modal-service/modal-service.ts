@@ -10,6 +10,10 @@ export class ModalService {
 
   constructor(private appRef: ApplicationRef) {}
 
+  /** * WHAT: Dynamically opens a component as a modal overlay.
+   * HOW: Uses 'createComponent' to instantiate the component via code, injects
+   * provided data, and attaches the view to the ApplicationRef to keep it outside standard routing.
+   */
   open<T>(component: Type<T>, data?: any): Observable<any> {
     if (this.modalRef) {
       return new Subject<any>().asObservable();
@@ -29,6 +33,10 @@ export class ModalService {
     return this.currentSubject.asObservable();
   }
 
+  /** * WHAT: Closes the active modal and cleans up the DOM.
+   * HOW: Emits the result to the caller, detaches the view, and destroys the
+   * component reference to ensure zero memory leaks.
+   */
   close(result?: any): void {
     if (!this.modalRef || !this.currentSubject) return;
 

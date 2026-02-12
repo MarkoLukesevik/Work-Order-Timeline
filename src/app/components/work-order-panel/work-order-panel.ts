@@ -1,4 +1,12 @@
-import {Component, ElementRef, HostListener, inject, Input, OnInit, ViewChild} from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  HostListener,
+  inject,
+  Input,
+  OnInit,
+  ViewChild
+} from '@angular/core';
 import {
   AbstractControl,
   FormControl,
@@ -63,6 +71,10 @@ export class WorkOrderPanel implements OnInit {
     return !!this.editingOrder;
   }
 
+  /** * WHAT: Prevents the user from tabbing out of the modal.
+   * HOW: Intercepts the Tab keydown event and manually cycles focus back to
+   * the first element if the last focusable element is reached.
+   */
   @HostListener('keydown', ['$event'])
   handleKeyDown(event: KeyboardEvent): void {
     if (event.key === 'Tab') {
@@ -80,6 +92,10 @@ export class WorkOrderPanel implements OnInit {
     this.initializeForm();
   }
 
+  /** * WHAT: Populates the form fields based on the component's intent.
+   * HOW: Checks if 'editingOrder' exists to patch existing data, or uses
+   * 'initialStartDate' to pre-fill a new order with a default 7-day duration.
+   */
   private initializeForm(): void {
     if (this.editingOrder) {
       this.form.patchValue({
@@ -99,6 +115,10 @@ export class WorkOrderPanel implements OnInit {
     }
   }
 
+  /** * WHAT: Handles the visual dismissal of the panel.
+   * HOW: Sets an 'isClosing' flag to trigger CSS exit animations and
+   * delays the ModalService cleanup to allow the animation to complete.
+   */
   private startCloseAnimation(payload?: WorkOrder): void {
     this.isClosing = true;
 
@@ -107,18 +127,23 @@ export class WorkOrderPanel implements OnInit {
     }, 250);
   }
 
-  // region date utils
   private convertToNgbDateStruct(date: Date | string): NgbDateStruct {
     const d = new Date(date);
     return { year: d.getFullYear(), month: d.getMonth() + 1, day: d.getDate() };
   }
 
+  /** * WHAT: Maps an NgbDateStruct to an ISO date string.
+   * HOW: Pads month and day values with leading zeros to ensure a
+   * consistent YYYY-MM-DD format for storage and comparison.
+   */
   private formatToIsoDateString(struct: NgbDateStruct): string {
     return `${struct.year}-${String(struct.month).padStart(2, '0')}-${String(struct.day).padStart(2, '0')}`;
   }
-  // endregion
 
-  // region validations
+  /** * WHAT: Cross-field validator to ensure date logic consistency.
+   * HOW: Compares the start and end Date objects and returns a 'dateOrder'
+   * error if the end date occurs before the start date.
+   */
   private dateOrderValidator(group: AbstractControl): ValidationErrors | null {
     const start = group.get('startDate')?.value as NgbDateStruct;
     const end = group.get('endDate')?.value as NgbDateStruct;
@@ -131,6 +156,10 @@ export class WorkOrderPanel implements OnInit {
     return endDate >= startDate ? null : { dateOrder: true };
   }
 
+  /** * WHAT: Cross-field validator for scheduling integrity.
+   * HOW: Delegates to the WorkOrderService to check if the selected dates
+   * intersect with existing orders on the same work center.
+   */
   private validateWorkCenterOverlap(group: AbstractControl): ValidationErrors | null {
     const workCenterId = this.editingOrder?.workCenterId || this.workCenterId;
     const startDateStruct = group.get('startDate')?.value;
@@ -151,9 +180,11 @@ export class WorkOrderPanel implements OnInit {
 
     return hasCollision ? { workCenterOverlap: true } : null;
   }
-  // endregion
 
-  // region public actions
+  /** * WHAT: Processes the form data for submission.
+   * HOW: Validates the form state, constructs a WorkOrder payload by
+   * converting NgbDate structs to ISO strings, and triggers the close sequence.
+   */
   onSubmit(): void {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
@@ -177,5 +208,4 @@ export class WorkOrderPanel implements OnInit {
   closePanel(): void {
     this.startCloseAnimation();
   }
-  // endregion
 }

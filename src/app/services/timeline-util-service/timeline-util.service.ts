@@ -8,7 +8,10 @@ import { ZoomLevelEnum } from '../../enums/zoom-level';
   providedIn: 'root',
 })
 export class TimelineUtilService {
-  /** Generate columns between rangeStart and rangeEnd */
+  /** * WHAT: Generates a structured array of columns for the grid.
+   * HOW: Uses a date-cursor to iterate from start to end, creating unique column
+   * objects with formatted labels and "Current Period" flags.
+   */
   generateColumns(rangeStart: Date, rangeEnd: Date, zoom: ZoomLevelEnum): TimelineColumn[] {
     const columns: TimelineColumn[] = [];
     const cursor = new Date(rangeStart);
@@ -25,7 +28,10 @@ export class TimelineUtilService {
     return columns;
   }
 
-  /** Extend range to the left, returning the new rangeStart */
+  /** * WHAT: Shifts the timeline start date backward to load historical dates.
+   * HOW: Mutates a date copy by retreating the cursor a specific number of steps
+   * based on the zoom granularity.
+   */
   extendLeft(currentStart: Date, zoom: ZoomLevelEnum, count: number): Date {
     const date = new Date(currentStart);
     for (let i = 0; i < count; i++) {
@@ -34,7 +40,10 @@ export class TimelineUtilService {
     return date;
   }
 
-  /** Extend range to the right, returning the new rangeEnd */
+  /** * WHAT: Shifts the timeline end date forward to load future dates.
+   * HOW: Mutates a date copy by advancing the cursor a specific number of steps
+   * based on the zoom granularity.
+   */
   extendRight(currentEnd: Date, zoom: ZoomLevelEnum, count: number): Date {
     const date = new Date(currentEnd);
     for (let i = 0; i < count; i++) {
@@ -43,7 +52,10 @@ export class TimelineUtilService {
     return date;
   }
 
-  /** Calculate bar position as percentages of total timeline width */
+  /** * WHAT: Determines the visual position and scale of a work order bar.
+   * HOW: Converts the start/end dates into a percentage-based 'left' and 'width'
+   * relative to the total timeline duration to ensure responsive alignment.
+   */
   calculateBarPosition(
     startDate: string,
     endDate: string,
@@ -63,7 +75,10 @@ export class TimelineUtilService {
     };
   }
 
-  /** Get initial date range for a given zoom level */
+  /** * WHAT: Establishes the default date boundaries for the initial render.
+   * HOW: Looks at the current date and subtracts/adds periods (6-12 months)
+   * proportional to the zoom level to provide a balanced starting viewport.
+   */
   getInitialRange(zoom: ZoomLevelEnum): { start: Date; end: Date } {
     const now = new Date();
     const start = new Date(now);
@@ -88,7 +103,10 @@ export class TimelineUtilService {
     return { start, end };
   }
 
-  /** How many columns to prepend/append on infinite scroll */
+  /** * WHAT: Defines the "chunk size" for timeline extensions.
+   * HOW: Returns a fixed integer of units (Days/Weeks/Months) to add when the
+   * user triggers an infinite scroll event, ensuring smooth date loading.
+   */
   getExtensionCount(zoom: ZoomLevelEnum): number {
     switch (zoom) {
       case ZoomLevelEnum.MONTH: return 6;
@@ -97,6 +115,10 @@ export class TimelineUtilService {
     }
   }
 
+  /** * WHAT: Generates human-readable labels for the timeline headers.
+   * HOW: Uses 'toLocaleDateString' with specific options to return context-aware
+   * strings like "Jan 2026" for months or "Feb 12" for days.
+   */
   private formatColumnLabel(date: Date, zoom: ZoomLevelEnum): string {
     switch (zoom) {
       case ZoomLevelEnum.MONTH:
@@ -111,6 +133,10 @@ export class TimelineUtilService {
     }
   }
 
+  /** * WHAT: Identifies if a specific column represents the "present" time.
+   * HOW: Compares the column date against the 'now' timestamp using varying
+   * precision (Year/Month for Months, Date ranges for Weeks) to highlight the current period.
+   */
   private isCurrentPeriod(date: Date, now: Date, zoom: ZoomLevelEnum): boolean {
     switch (zoom) {
       case ZoomLevelEnum.MONTH:
@@ -129,6 +155,10 @@ export class TimelineUtilService {
     }
   }
 
+  /** * WHAT: Increments the date cursor based on the zoom level.
+   * HOW: Mutates the date object by adding one unit of the current timescale
+   * (Day/Week/Month) to move the timeline forward.
+   */
   private advanceCursor(date: Date, zoom: ZoomLevelEnum): void {
     switch (zoom) {
       case ZoomLevelEnum.MONTH:
@@ -143,6 +173,10 @@ export class TimelineUtilService {
     }
   }
 
+  /** * WHAT: Decrements the date cursor based on the zoom level.
+   * HOW: Mutates the date object by subtracting one unit of the current timescale
+   * (Day/Week/Month) to move the timeline backward.
+   */
   private retreatCursor(date: Date, zoom: ZoomLevelEnum): void {
     switch (zoom) {
       case ZoomLevelEnum.MONTH:
