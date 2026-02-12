@@ -175,7 +175,7 @@ export class Timeline implements OnInit, OnChanges, AfterViewInit {
 
   onColumnClick(workCenter: WorkCenter, column: TimelineColumn, event: MouseEvent): void {
     const target = event.target as HTMLElement;
-    if (target.closest('app-work-order-bar') || target.closest('.wo-bar')) return;
+    if (target.closest('app-work-order-bar') || target.closest('.work-order')) return;
 
     const selectedDate = new Date(column.date);
 
