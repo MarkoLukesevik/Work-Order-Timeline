@@ -3,7 +3,7 @@ import {
   ChangeDetectorRef,
   Component,
   ElementRef,
-  EventEmitter,
+  EventEmitter, inject,
   Input,
   NgZone, OnChanges, OnInit,
   Output,
@@ -40,6 +40,10 @@ export class Timeline implements OnInit, OnChanges, AfterViewInit {
 
   @ViewChild('scrollContainer') scrollContainerElement!: ElementRef<HTMLDivElement>;
 
+  private readonly timelineUtilService: TimelineUtilService = inject(TimelineUtilService);
+  private readonly ngZone: NgZone = inject(NgZone);
+  private readonly changeDetector: ChangeDetectorRef = inject(ChangeDetectorRef);
+
   columns: TimelineColumn[] = [];
   columnPixelWidth = 110;
 
@@ -48,12 +52,6 @@ export class Timeline implements OnInit, OnChanges, AfterViewInit {
   private isScrollListenerAttached = false;
 
   protected readonly ZoomLevelEnum = ZoomLevelEnum;
-
-  constructor(
-    private timelineUtilService: TimelineUtilService,
-    private ngZone: NgZone,
-    private changeDetector: ChangeDetectorRef
-  ) {}
 
   ngOnInit(): void {
     this.rebuildTimeline();
