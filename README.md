@@ -45,3 +45,4 @@ An interactive manufacturing ERP timeline component built with Angular. This app
  - src/app/base-components: Reusable UI patterns like the Base Modal.
 
 📹 Demo Video
+ - https://www.loom.com/share/38e65919878a4194b8948f885baa7459
