@@ -52,31 +52,72 @@ export class TimelineUtilService {
     return date;
   }
 
-  /** * WHAT: Determines the visual position and scale of a work order bar.
-   * HOW: Converts the start/end dates into a percentage-based 'left' and 'width'
-   * relative to the total timeline duration to ensure responsive alignment.
+  /**
+   * WHAT: Determines the visual position and scale of a work order bar.
+   * HOW:
+   * - For Day/Week: Uses linear percentage of the total timeline duration.
+   * - For Month: Uses a Column-Index + Day-Ratio approach to prevent drift caused
+   * by varying month lengths (e.g., Feb vs March), ensuring bars align perfectly
+   * with the visual grid columns.
    */
   calculateBarPosition(
-    startDate: string,
-    endDate: string,
-    rangeStart: Date,
-    timelineDurationMs: number
+    startDateIso: string,
+    endDateIso: string,
+    timelineRangeStartDate: Date,
+    totalTimelineDurationMs: number,
+    zoom: ZoomLevelEnum,
+    columns: TimelineColumn[],
   ): BarPosition {
-    const start = new Date(startDate).getTime();
-    const end = new Date(endDate).getTime();
-    const rangeMs = rangeStart.getTime();
+    const orderStartTimestamp = this.getLocalTime(startDateIso);
+    const orderEndTimestamp = this.getLocalTime(endDateIso);
+    const timelineStartTimestamp = this.getLocalTime(timelineRangeStartDate);
 
-    const leftPct = ((start - rangeMs) / timelineDurationMs) * 100;
-    const widthPct = ((end - start) / timelineDurationMs) * 100;
+    // LOGIC FOR DAY/WEEK: Pure Linear Math
+    if (zoom !== ZoomLevelEnum.MONTH) {
+      const leftPercentage = ((orderStartTimestamp - timelineStartTimestamp) / totalTimelineDurationMs) * 100;
+      const widthPercentage = ((orderEndTimestamp - orderStartTimestamp) / totalTimelineDurationMs) * 100;
+
+      return {
+        left: leftPercentage,
+        width: widthPercentage
+      };
+    }
+
+    // LOGIC FOR MONTH: Grid-Relative Math
+    const rangeStartObject = new Date(timelineRangeStartDate);
+    const orderStartObject = new Date(startDateIso);
+
+    // 1. Calculate how many full month-columns exist between the timeline start and the order start
+    const yearsDifference = orderStartObject.getFullYear() - rangeStartObject.getFullYear();
+    const monthsDifference = (yearsDifference * 12) + (orderStartObject.getMonth() - rangeStartObject.getMonth());
+
+    // 2. Calculate the position within the starting month (e.g., Jan 15th is ~50% into the column)
+    const totalDaysInStartingMonth = new Date(orderStartObject.getFullYear(), orderStartObject.getMonth() + 1, 0).getDate();
+    const dayOfMonthIndex = orderStartObject.getDate() - 1; // 0-indexed for math
+    const progressWithinMonthRatio = dayOfMonthIndex / totalDaysInStartingMonth;
+
+    // 3. Map the column index and the internal month progress to the total grid width
+    const totalColumnCount = columns.length;
+    const finalLeftPercentage = ((monthsDifference + progressWithinMonthRatio) / totalColumnCount) * 100;
+
+    // 4. Calculate width based on an average month length (30.44 days) to maintain visual consistency
+    const millisecondsPerDay = 1000 * 60 * 60 * 24;
+    const totalOrderDurationDays = (orderEndTimestamp - orderStartTimestamp) / millisecondsPerDay;
+    const finalWidthPercentage = (totalOrderDurationDays / (totalColumnCount * 30.44)) * 100;
 
     return {
-      left: Math.max(0, leftPct),
-      width: Math.max(0.5, widthPct),
+      left: finalLeftPercentage,
+      width: Math.max(finalWidthPercentage, 1.5) // 1.5% minimum width for visibility
     };
   }
 
+  private getLocalTime(dateInput: string | Date): number {
+    const d = new Date(dateInput);
+    return new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime();
+  }
+
   /** * WHAT: Establishes the default date boundaries for the initial render.
-   * HOW: Looks at the current date and subtracts/adds periods (6-12 months)
+   * HOW: Looks at the current date and subtracts/adds periods
    * proportional to the zoom level to provide a balanced starting viewport.
    */
   getInitialRange(zoom: ZoomLevelEnum): { start: Date; end: Date } {
@@ -92,12 +133,16 @@ export class TimelineUtilService {
         end.setDate(1);
         break;
       case ZoomLevelEnum.WEEK:
-        start.setDate(start.getDate() - 7 * 26); // ~6 months
-        end.setDate(end.getDate() + 7 * 26);
+        start.setDate(start.getDate() - (7 * 26));
+        const dayOffset = start.getDay();
+        start.setDate(start.getDate() - dayOffset);
+        start.setHours(0, 0, 0, 0);
+        end.setDate(end.getDate() + (7 * 52));
         break;
       case ZoomLevelEnum.DAY:
         start.setDate(start.getDate() - 90);
         end.setDate(end.getDate() + 90);
+        end.setDate(end.getDate() + 180);
         break;
     }
     return { start, end };

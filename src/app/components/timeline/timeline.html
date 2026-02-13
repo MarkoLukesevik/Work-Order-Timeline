@@ -51,7 +51,7 @@
                 </div>
               </div>
             }
-            @for (workOrder of getOrdersForWorkCenter(workCenter.id); track workOrder.id) {
+            @for (workOrder of getVisibleOrdersForWorkCenter(workCenter.id); track workOrder.id) {
               <app-work-order-bar
                 [order]="workOrder"
                 [left]="getWorkOrderBarPosition(workOrder).left"

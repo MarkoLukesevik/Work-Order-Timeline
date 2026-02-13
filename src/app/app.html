@@ -1,31 +1,30 @@
-<div>
-  <div class="app">
-    <header class="app-header">
-      <img
-        class="app-header__logo"
-        ngSrc="/assets/images/logo.svg"
-        alt="Naologic logo"
-        height="10"
-        width="80"
-      />
-    </header>
+<div class="app">
+  <header class="app-header">
+    <img
+      class="app-header__logo"
+      ngSrc="/assets/images/logo.svg"
+      alt="Naologic logo"
+      height="10"
+      width="80"
+    />
+  </header>
 
-    <main class="app-main">
-      <h1 class="app-main__title">Work Orders</h1>
+  <main class="app-main">
+    <h1 class="app-main__title">Work Orders</h1>
 
-      <app-zoom-selector
-        [zoom]="zoom()"
-        (zoomChange)="zoom.set($event)"
-      />
+    <app-zoom-selector
+      [zoom]="zoom()"
+      (zoomChange)="zoom.set($event)"
+    />
 
-      <app-timeline
-        [zoom]="zoom()"
-        [workCenters]="workCenters"
-        [orders]="orders()"
-        (createOrder)="openCreatePanel($event.workCenterId, $event.date)"
-        (editOrder)="openEditPanel($event)"
-        (deleteOrder)="onDeleteOrder($event)"
-      />
-    </main>
-  </div>
+    <app-timeline
+      [zoom]="zoom()"
+      [workCenters]="workCenters"
+      [orders]="orders()"
+      (createOrder)="openCreatePanel($event.workCenterId, $event.date)"
+      (editOrder)="openEditPanel($event)"
+      (deleteOrder)="onDeleteOrder($event)"
+    />
+  </main>
 </div>
+

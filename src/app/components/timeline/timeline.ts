@@ -164,8 +164,26 @@ export class Timeline implements OnInit, OnChanges, AfterViewInit {
     }
   }
 
-  getOrdersForWorkCenter(workCenterId: string): WorkOrder[] {
-    return this.orders.filter(o => o.workCenterId === workCenterId);
+  /**
+   * WHAT: Filters and returns work orders assigned to a specific work center that
+   * fall within the currently active timeline date range.
+   * * HOW:
+   * 1. Checks if the work order belongs to the requested work center.
+   * 2. Performs an 'overlap test' to see if the order's time span intersects with
+   * the visible timeline range.
+   */
+  getVisibleOrdersForWorkCenter(workCenterId: string): WorkOrder[] {
+    const rangeStart = this.timelineRangeStartDate.getTime();
+    const rangeEnd = this.timelineRangeEndDate.getTime();
+
+    return this.orders.filter(order => {
+      if (order.workCenterId !== workCenterId) return false;
+
+      const start = new Date(order.startDate).getTime();
+      const end = new Date(order.endDate).getTime();
+
+      return end > rangeStart && start < rangeEnd;
+    });
   }
 
   /** * WHAT: Determines the visual coordinates for a work order bar.
@@ -179,7 +197,9 @@ export class Timeline implements OnInit, OnChanges, AfterViewInit {
       workOrder.startDate,
       workOrder.endDate,
       this.timelineRangeStartDate,
-      timelineDurationInMs
+      timelineDurationInMs,
+      this.zoom,
+      this.columns
     );
   }
 
